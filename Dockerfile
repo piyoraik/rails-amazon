@@ -19,7 +19,6 @@ libcurl-devel \
 sqlite-devel \
 mysql-devel \
 gcc-c++ \
-git \
 openssl-devel \
 readline-devel \
 curl-devel \
@@ -32,7 +31,10 @@ wget \
 libpng-devel \
 libjpeg-devel \
 libtiff-devel \
-gcc
+gcc \
+postgresql12 \
+postgresql-devel
+
 
 # Gitの更新
 WORKDIR /usr/local/src
@@ -46,7 +48,7 @@ make prefix=/usr/local install
 # ImageMagickのインストール
 RUN wget http://www.imagemagick.org/download/ImageMagick.tar.gz && \
 tar -vxf ImageMagick.tar.gz && \
-cd ImageMagick-7.0.10-13 && \
+cd ImageMagick-7.0.10-27 && \
 ./configure && \
 make && \
 make install

@@ -1,0 +1,63 @@
+  version: '3'
+  services:
+    api:
+      container_name: rails
+      build:
+        context: ./
+      volumes:
+        - ./app:/app
+        - ./conf/.bashrc:/root/.bashrc
+        - ./conf/.vimrc:/root/.vimrc
+      ports:
+        - 5000:5000
+        - 80:3000
+      tty: true
+      restart: always
+      depends_on:
+        - db
+      networks:
+        app_net:
+          ipv4_address: 192.168.32.11
+
+    front:
+      container_name: nuxt
+      build:
+        context: ./
+        dockerfile: Dockerfile_nuxt
+      ports:
+        - 8080:8080
+      volumes:
+        - ./front:/front
+        - ./conf/.bashrc:/root/.bashrc
+        - ./conf/.vimrc:/root/.vimrc
+      depends_on:
+        - api
+      tty: true
+      networks:
+        app_net:
+          ipv4_address: 192.168.32.10
+
+    db:
+      container_name: postgres
+      build:
+        context: ./
+        dockerfile: Dockerfile_postgres
+      volumes:
+        - ./db:/var/lib/postgresql/data
+      ports:
+        - 5432:5432
+      environment:
+        POSTGRES_PASSWORD: password
+        TZ: "Asia/Tokyo"
+      restart: always
+      networks:
+        app_net:
+          ipv4_address: 192.168.32.12
+
+  networks:
+    app_net:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 192.168.32.0/24
